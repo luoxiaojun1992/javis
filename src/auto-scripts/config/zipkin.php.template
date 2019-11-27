@@ -1,0 +1,14 @@
+<?php
+
+return [
+    'es' => [
+        'hosts' => [
+            [
+                'host' => '',
+                'port' => 9200,
+                'user' => 'elastic',
+                'pass' => '',
+            ],
+        ],
+    ],
+];

@@ -1,0 +1,5 @@
+/src/auto-scripts/config/*
+/.idea
+/vendor
+/src/auto-scripts/output/*
+/src/config/*
