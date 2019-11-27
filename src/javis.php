@@ -70,32 +70,31 @@ EOF;
 }
 
 function zipkinReportHandler() {
-    printLn('Please input args');
+    dialog(function () {
+        printLn('Please input args or 0(Exit)');
 
-    $args = fgets(STDIN);
+        $args = fgets(STDIN);
+        $args = rtrim($args, PHP_EOL);
 
-    shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/zipkinReport.php ' . $args);
+        if ($args === '0') {
+            return 2;
+        }
+
+        shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/zipkinReport.php ' . $args);
+
+        return null;
+    });
 }
 
 function dirReviewBotHandler() {
     dialog(function () {
-        printLn('Please input dir path');
+        printLn('Please input dir path or 0(Exit)');
 
         $option = fgets(STDIN);
         $option = rtrim($option, PHP_EOL);
 
         if ($option === '0') {
             return 2;
-        }
-
-        if (!is_string($option)) {
-            printLn('Invalid option');
-            return 1;
-        }
-
-        if ((!is_dir($option)) && (!file_exists($option))) {
-            printLn('Invalid option');
-            return 1;
         }
 
         printLn(json_encode((new \Lxj\Review\Bot\Bot(
@@ -109,18 +108,13 @@ function dirReviewBotHandler() {
 
 function gitReviewBotHandler() {
     dialog(function () {
-        printLn('Please input merge request url');
+        printLn('Please input merge request url or 0(Exit)');
 
         $option = fgets(STDIN);
         $option = rtrim($option, PHP_EOL);
 
         if ($option === '0') {
             return 2;
-        }
-
-        if (!is_string($option)) {
-            printLn('Invalid option');
-            return 1;
         }
 
         printLn(json_encode((new \Lxj\Review\Bot\GitBot(
