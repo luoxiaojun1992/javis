@@ -4,6 +4,10 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 $zipkinConfig = require_once __DIR__ . '/config/zipkin.php';
 
+if (date_default_timezone_get() !== 'PRC') {
+    date_default_timezone_set('PRC');
+}
+
 $startDate = $argv[1] ?? date('Y-m-d', strtotime('-1 week'));
 $endDate = $argv[2] ?? date('Y-m-d');
 $startTimestamp = strtotime($startDate . ' 00:00:00');
