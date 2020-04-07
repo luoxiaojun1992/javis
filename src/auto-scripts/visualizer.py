@@ -24,7 +24,7 @@ with open(sys.argv[1],'rb') as csvfile:
     clientErrorTimes = [float(row['client_error_times']) for row in reader]
 
 plt.figure(1)
-plt.title('Success Max Duration')
+plt.title('Max Success Duration')
 plt.xlabel('date')
 plt.ylabel('duration')
 plt.plot(reportDate, successMaxDuration)
