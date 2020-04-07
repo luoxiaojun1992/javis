@@ -32,22 +32,8 @@ function dialog($chatBot) {
     }
 }
 
-function functionsPrompt() {
-    dialog(function () {
-        $functionsPromotion = <<<EOF
-Please tell me your option:
-0. exit
-1. zipkin report
-2. review bot
-3. php repl
-EOF;
-
-        $functionHandlers = [
-            '1' => 'zipkinReportHandler',
-            '2' => 'reviewBotHandler',
-            '3' => 'phpREPLHandler',
-        ];
-
+function optionsDialog($functionsPromotion, $functionHandlers, $outer = false) {
+    dialog(function () use ($functionsPromotion, $functionHandlers, $outer) {
         printLn($functionsPromotion);
 
         $option = fgets(STDIN);
@@ -59,7 +45,11 @@ EOF;
         }
 
         if ($option === '0') {
-            return 3;
+            if ($outer) {
+                return 3;
+            } else {
+                return 2;
+            }
         }
 
         if (!isset($functionHandlers[$option])) {
@@ -73,43 +63,38 @@ EOF;
     });
 }
 
+function functionsPrompt() {
+    $functionsPromotion = <<<EOF
+Please tell me your option:
+0. exit
+1. zipkin report
+2. review bot
+3. php repl
+EOF;
+
+    $functionHandlers = [
+        '1' => 'zipkinReportHandler',
+        '2' => 'reviewBotHandler',
+        '3' => 'phpREPLHandler',
+    ];
+
+    optionsDialog($functionsPromotion, $functionHandlers, true);
+}
+
 function zipkinReportHandler() {
-    dialog(function () {
-        $functionsPromotion = <<<EOF
+    $functionsPromotion = <<<EOF
 Please tell me your option:
 0. exit
 1. weekly report
 2. agg report
 EOF;
 
-        $functionHandlers = [
-            '1' => 'zipkinWeeklyReportHandler',
-            '2' => 'zipkinAggReportHandler',
-        ];
+    $functionHandlers = [
+        '1' => 'zipkinWeeklyReportHandler',
+        '2' => 'zipkinAggReportHandler',
+    ];
 
-        printLn($functionsPromotion);
-
-        $option = fgets(STDIN);
-        $option = rtrim($option, PHP_EOL);
-
-        if (!ctype_digit($option)) {
-            printLn('Invalid option');
-            return 1;
-        }
-
-        if ($option === '0') {
-            return 2;
-        }
-
-        if (!isset($functionHandlers[$option])) {
-            printLn('Invalid option');
-            return 1;
-        }
-
-        call_user_func($functionHandlers[$option]);
-
-        return null;
-    });
+    optionsDialog($functionsPromotion, $functionHandlers);
 }
 
 function zipkinWeeklyReportHandler() {
@@ -140,7 +125,11 @@ function zipkinAggReportHandler() {
             return 2;
         }
 
+        printLn('Generating agg report...');
+
         shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/aggReport.php');
+
+        printLn('Generating diagram...');
 
         shell_exec(
             '/usr/bin/env python ' . __DIR__ . '/auto-scripts/visualizer.py ' .
@@ -195,42 +184,19 @@ function gitReviewBotHandler() {
 }
 
 function reviewBotHandler() {
-    dialog(function () {
-        $functionsPromotion = <<<EOF
+    $functionsPromotion = <<<EOF
 Please tell me your option:
 0. exit
 1. dir review bot
 2. git review bot
 EOF;
 
-        $functionHandlers = [
-            '1' => 'dirReviewBotHandler',
-            '2' => 'gitReviewBotHandler',
-        ];
+    $functionHandlers = [
+        '1' => 'dirReviewBotHandler',
+        '2' => 'gitReviewBotHandler',
+    ];
 
-        printLn($functionsPromotion);
-
-        $option = fgets(STDIN);
-        $option = rtrim($option, PHP_EOL);
-
-        if (!ctype_digit($option)) {
-            printLn('Invalid option');
-            return 1;
-        }
-
-        if ($option === '0') {
-            return 2;
-        }
-
-        if (!isset($functionHandlers[$option])) {
-            printLn('Invalid option');
-            return 1;
-        }
-
-        call_user_func($functionHandlers[$option]);
-
-        return null;
-    });
+    optionsDialog($functionsPromotion, $functionHandlers);
 }
 
 function phpREPLHandler() {
