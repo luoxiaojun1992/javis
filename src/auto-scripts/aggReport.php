@@ -1,5 +1,9 @@
 <?php
 
+if (date_default_timezone_get() !== 'PRC') {
+    date_default_timezone_set('PRC');
+}
+
 $fd = opendir(__DIR__ . '/output');
 
 $aggReportFd = fopen(__DIR__ . '/output/zipkin-agg-report-' . date('Y-m-d') . '.csv', 'a');

@@ -2,6 +2,10 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (date_default_timezone_get() !== 'PRC') {
+    date_default_timezone_set('PRC');
+}
+
 function printLn(...$msg) {
     array_map(function($msg){
         echo $msg, str_repeat(PHP_EOL, 3);
@@ -71,6 +75,45 @@ EOF;
 
 function zipkinReportHandler() {
     dialog(function () {
+        $functionsPromotion = <<<EOF
+Please tell me your option:
+0. exit
+1. weekly report
+2. agg report
+EOF;
+
+        $functionHandlers = [
+            '1' => 'zipkinWeeklyReportHandler',
+            '2' => 'zipkinAggReportHandler',
+        ];
+
+        printLn($functionsPromotion);
+
+        $option = fgets(STDIN);
+        $option = rtrim($option, PHP_EOL);
+
+        if (!ctype_digit($option)) {
+            printLn('Invalid option');
+            return 1;
+        }
+
+        if ($option === '0') {
+            return 2;
+        }
+
+        if (!isset($functionHandlers[$option])) {
+            printLn('Invalid option');
+            return 1;
+        }
+
+        call_user_func($functionHandlers[$option]);
+
+        return null;
+    });
+}
+
+function zipkinWeeklyReportHandler() {
+    dialog(function () {
         printLn('Please input args or 0(Exit)');
 
         $args = fgets(STDIN);
@@ -81,6 +124,28 @@ function zipkinReportHandler() {
         }
 
         shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/zipkinReport.php ' . $args);
+
+        return null;
+    });
+}
+
+function zipkinAggReportHandler() {
+    dialog(function () {
+        printLn('Please press enter or input 0(Exit)');
+
+        $args = fgets(STDIN);
+        $args = rtrim($args, PHP_EOL);
+
+        if ($args === '0') {
+            return 2;
+        }
+
+        shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/aggReport.php');
+
+        shell_exec(
+            '/usr/bin/env python ' . __DIR__ . '/auto-scripts/visualizer.py ' .
+            __DIR__ . '/auto-scripts/output/zipkin-agg-report-' . date('Y-m-d') . '.csv'
+        );
 
         return null;
     });
