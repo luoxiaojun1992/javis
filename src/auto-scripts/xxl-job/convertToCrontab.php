@@ -41,6 +41,12 @@ function filterGlueMark($glueMark)
     return $glueMark;
 }
 
+/**
+ * @param $xxlJobTask
+ * @param $shellPath
+ * @return string
+ * @throws Exception
+ */
 function convertXXLToCrontab($xxlJobTask, $shellPath)
 {
     $jobCron = $xxlJobTask['job_cron'];
@@ -59,6 +65,11 @@ function convertXXLToCrontab($xxlJobTask, $shellPath)
     return implode(' ', $crontabArr) . ' ' . realpath($shellPath);
 }
 
+/**
+ * @param $xxlJobTask
+ * @return string
+ * @throws Exception
+ */
 function generateShell($xxlJobTask)
 {
     $shell = $xxlJobTask['glue_source'];
@@ -69,11 +80,11 @@ function generateShell($xxlJobTask)
         throw new \Exception('Shell existed');
     }
 
-    if (file_put_contents($shellPath, $shell)) {
-        return $shellPath;
+    if (!file_put_contents($shellPath, $shell)) {
+        throw new \Exception('Failed to generate shell');
     }
 
-    return null;
+    return $shellPath;
 }
 
 if (file_exists(__DIR__ . '/output/crontab.txt')) {
@@ -84,10 +95,7 @@ fetchXXLJobTasks(function ($xxlJobTasks) {
     $outputCronExprArr = [];
 
     foreach ($xxlJobTasks as $xxlJobTask) {
-        if (is_null($shellPath = generateShell($xxlJobTask))) {
-            continue;
-        }
-
+        $shellPath = generateShell($xxlJobTask);
         $cronExpr = convertXXLToCrontab($xxlJobTask, $shellPath);
 
         $xxlJobTaskStatus = $xxlJobTask['trigger_status'];
