@@ -1,0 +1,96 @@
+<?php
+
+function fetchXXLJobTasks($callback)
+{
+    $config = require __DIR__ . '/config/db.php';
+
+    $pdo = new \PDO(
+        $config['dsn'],
+        $config['username'],
+        $config['passwd'],
+        $config['options']
+    );
+
+    $sql = 'SELECT * FROM `xxl_job_info` WHERE `glue_type` = "GLUE_SHELL" LIMIT %s,%s';
+
+    $offset = 0;
+    $limit = 100;
+
+    do {
+        $stmt = $pdo->prepare(sprintf($sql, $offset, $limit));
+
+        if ($stmt->execute()) {
+            $xxlJobTasks = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            call_user_func($callback, $xxlJobTasks);
+            $xxlJobTaskCnt = count($xxlJobTasks);
+            $offset += $limit;
+        } else {
+            $xxlJobTaskCnt = 0;
+        }
+    } while (($xxlJobTaskCnt > 0) && ($xxlJobTaskCnt < $limit));
+}
+
+function convertXXLToCrontab($xxlJobTask)
+{
+    $jobCron = $xxlJobTask['job_cron'];
+    $jobCronArr = explode(' ', $jobCron);
+    $crontabArr = array_slice($jobCronArr, 1, 5);
+
+    $filtered = array_walk($crontabArr, function (&$val) {
+        if ($val === '?') {
+            $val = '*';
+        }
+    });
+    if (!$filtered) {
+        throw new \Exception('Invalid job cron');
+    }
+
+    $jobDesc = $xxlJobTask['job_desc'];
+    $shellName = $jobDesc . '.sh';
+
+    return implode(' ', $crontabArr) . ' {shell_dir}/' . $shellName;
+}
+
+function generateShell($xxlJobTask)
+{
+    $shell = $xxlJobTask['glue_source'];
+    $jobDesc = $xxlJobTask['job_desc'];
+    $shellName = $jobDesc . '.sh';
+    $shellPath = __DIR__ . '/output/shell/' . $shellName;
+    if (file_exists($shellPath)) {
+        throw new \Exception('Shell existed');
+    }
+
+    file_put_contents($shellPath, $shell);
+}
+
+if (file_exists(__DIR__ . '/output/crontab.txt')) {
+    throw new \Exception('Crontab file existed');
+}
+
+fetchXXLJobTasks(function ($xxlJobTasks) {
+    $outputCronExprArr = [];
+
+    foreach ($xxlJobTasks as $xxlJobTask) {
+        generateShell($xxlJobTask);
+
+        $cronExpr = convertXXLToCrontab($xxlJobTask);
+
+        $xxlJobTaskStatus = $xxlJobTask['trigger_status'];
+        if ($xxlJobTaskStatus === 0) {
+            $outputCronExpr = '# ' . $cronExpr;
+        } else {
+            $outputCronExpr = $cronExpr;
+        }
+
+        $outputCronExprArr[] = $outputCronExpr;
+    }
+
+    if (count($outputCronExprArr) > 0) {
+        file_put_contents(
+            __DIR__ . '/output/crontab.txt',
+            implode(PHP_EOL, $outputCronExprArr) . PHP_EOL,
+            FILE_APPEND|LOCK_EX
+        );
+    }
+});
