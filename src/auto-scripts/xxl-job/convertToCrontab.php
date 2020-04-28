@@ -77,6 +77,7 @@ function generateShell($xxlJobTask)
     $shellName = filterGlueMark($glueRemark) . '.sh';
     $shellPath = __DIR__ . '/output/shell/' . $shellName;
     if (file_exists($shellPath)) {
+        //Avoiding risky override or duplicated pinyin of glue_remark
         throw new \Exception('Shell existed');
     }
 
