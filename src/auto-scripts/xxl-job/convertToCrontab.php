@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/../../../vendor/autoload.php';
+
 function fetchXXLJobTasks($callback)
 {
     $config = require __DIR__ . '/config/db.php';
@@ -30,6 +32,15 @@ function fetchXXLJobTasks($callback)
     } while (($xxlJobTaskCnt > 0) && ($xxlJobTaskCnt < $limit));
 }
 
+function filterGlueMark($glueMark)
+{
+    if (preg_match("/[\x{4e00}-\x{9fa5}]+/u", $glueMark)) {
+        return (new \Overtrue\Pinyin\Pinyin())->abbr($glueMark);
+    }
+
+    return $glueMark;
+}
+
 function convertXXLToCrontab($xxlJobTask)
 {
     $jobCron = $xxlJobTask['job_cron'];
@@ -45,8 +56,8 @@ function convertXXLToCrontab($xxlJobTask)
         throw new \Exception('Invalid job cron');
     }
 
-    $jobDesc = $xxlJobTask['job_desc'];
-    $shellName = $jobDesc . '.sh';
+    $glueRemark = $xxlJobTask['glue_remark'];
+    $shellName = filterGlueMark($glueRemark) . '.sh';
 
     return implode(' ', $crontabArr) . ' {shell_dir}/' . $shellName;
 }
@@ -54,8 +65,8 @@ function convertXXLToCrontab($xxlJobTask)
 function generateShell($xxlJobTask)
 {
     $shell = $xxlJobTask['glue_source'];
-    $jobDesc = $xxlJobTask['job_desc'];
-    $shellName = $jobDesc . '.sh';
+    $glueRemark = $xxlJobTask['glue_remark'];
+    $shellName = filterGlueMark($glueRemark) . '.sh';
     $shellPath = __DIR__ . '/output/shell/' . $shellName;
     if (file_exists($shellPath)) {
         throw new \Exception('Shell existed');
