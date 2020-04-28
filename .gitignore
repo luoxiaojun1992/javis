@@ -1,5 +1,5 @@
-/src/auto-scripts/config/*
+/src/auto-scripts/zipkin/config/*
 /.idea
 /vendor
-/src/auto-scripts/output/*
-/src/config/*
+/src/auto-scripts/zipkin/output/*
+/src/config/review-robot/*

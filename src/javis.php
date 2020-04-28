@@ -108,7 +108,7 @@ function zipkinWeeklyReportHandler() {
             return 2;
         }
 
-        shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/zipkinReport.php ' . $args);
+        shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/zipkin/zipkinReport.php ' . $args);
 
         return null;
     });
@@ -127,13 +127,13 @@ function zipkinAggReportHandler() {
 
         printLn('Generating agg report...');
 
-        shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/aggReport.php');
+        shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/zipkin/aggReport.php');
 
         printLn('Generating diagram...');
 
         shell_exec(
-            '/usr/bin/env python ' . __DIR__ . '/auto-scripts/visualizer.py ' .
-            __DIR__ . '/auto-scripts/output/zipkin-agg-report-' . date('Y-m-d') . '.csv'
+            '/usr/bin/env python ' . __DIR__ . '/auto-scripts/zipkin/visualizer.py ' .
+            __DIR__ . '/auto-scripts/zipkin/output/zipkin-agg-report-' . date('Y-m-d') . '.csv'
         );
 
         return null;
@@ -152,8 +152,8 @@ function dirReviewBotHandler() {
         }
 
         printLn(json_encode((new \Lxj\Review\Bot\Bot(
-            require __DIR__ . '/config/analyser.php',
-            require __DIR__ . '/config/ignored.php'
+            require __DIR__ . '/config/review-robot/analyser.php',
+            require __DIR__ . '/config/review-robot/ignored.php'
         ))->review($option)->getErrors(), JSON_PRETTY_PRINT));
 
         return null;
@@ -173,10 +173,10 @@ function gitReviewBotHandler() {
 
         printLn(json_encode((new \Lxj\Review\Bot\GitBot(
             new \Lxj\Review\Bot\Bot(
-                require __DIR__ . '/config/analyser.php',
-                require __DIR__ . '/config/ignored.php'
+                require __DIR__ . '/config/review-robot/analyser.php',
+                require __DIR__ . '/config/review-robot/ignored.php'
             ),
-            require __DIR__ . '/config/gitlab.php'
+            require __DIR__ . '/config/review-robot/gitlab.php'
         ))->review($option)->getErrors(), JSON_PRETTY_PRINT));
 
         return null;

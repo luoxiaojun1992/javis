@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 $zipkinConfig = require_once __DIR__ . '/config/zipkin.php';
 
