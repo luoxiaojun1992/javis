@@ -62,7 +62,7 @@ function convertXXLToCrontab($xxlJobTask, $shellPath)
         throw new \Exception('Invalid job cron');
     }
 
-    return implode(' ', $crontabArr) . ' ' . realpath($shellPath);
+    return implode(' ', $crontabArr) . ' ' . realpath($shellPath) . ' ' . $xxlJobTask['executor_param'];
 }
 
 /**
