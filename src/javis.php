@@ -70,12 +70,14 @@ Please tell me your option:
 1. zipkin report
 2. review bot
 3. php repl
+4. xxl-job cron exporter
 EOF;
 
     $functionHandlers = [
         '1' => 'zipkinReportHandler',
         '2' => 'reviewBotHandler',
         '3' => 'phpREPLHandler',
+        '4' => 'xxlJobExportHandler',
     ];
 
     optionsDialog($functionsPromotion, $functionHandlers, true);
