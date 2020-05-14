@@ -2,20 +2,17 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
+//Global Config
 if (date_default_timezone_get() !== 'PRC') {
     date_default_timezone_set('PRC');
 }
 
+//Utils
 function printLn(...$msg) {
     array_map(function($msg){
         echo $msg, str_repeat(PHP_EOL, 3);
     }, $msg);
 }
-
-printLn(
-        'Hello, I\'m javis.',
-    'What can I do for you?'
-);
 
 function dialog($chatBot) {
     while (true) {
@@ -63,6 +60,7 @@ function optionsDialog($functionsPromotion, $functionHandlers, $outer = false) {
     });
 }
 
+//Entrance
 function functionsPrompt() {
     $functionsPromotion = <<<EOF
 Please tell me your option:
@@ -83,6 +81,7 @@ EOF;
     optionsDialog($functionsPromotion, $functionHandlers, true);
 }
 
+//Zipkin
 function zipkinReportHandler() {
     $functionsPromotion = <<<EOF
 Please tell me your option:
@@ -142,6 +141,7 @@ function zipkinAggReportHandler() {
     });
 }
 
+//Review Bot
 function dirReviewBotHandler() {
     dialog(function () {
         printLn('Please input dir path or 0(Exit)');
@@ -210,5 +210,27 @@ function phpREPLHandler() {
     // And go!
     call_user_func(\Psy\bin());
 }
+
+function xxlJobExportHandler() {
+    dialog(function () {
+        printLn('Please input args or 0(Exit)');
+
+        $args = fgets(STDIN);
+        $args = rtrim($args, PHP_EOL);
+
+        if ($args === '0') {
+            return 2;
+        }
+
+        shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/xxl-job/convertToCrontab.php ' . $args);
+
+        return null;
+    });
+}
+
+printLn(
+        'Hello, I\'m javis.',
+    'What can I do for you?'
+);
 
 functionsPrompt();
