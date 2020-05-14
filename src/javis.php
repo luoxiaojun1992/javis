@@ -2,11 +2,6 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
-//Global Config
-if (date_default_timezone_get() !== 'PRC') {
-    date_default_timezone_set('PRC');
-}
-
 //Utils
 function printLn(...$msg) {
     array_map(function($msg){
@@ -201,6 +196,7 @@ EOF;
     optionsDialog($functionsPromotion, $functionHandlers);
 }
 
+//REPL
 function phpREPLHandler() {
     $_SERVER['argv'] = [];
     $_SERVER['argc'] = 0;
@@ -211,6 +207,7 @@ function phpREPLHandler() {
     call_user_func(\Psy\bin());
 }
 
+//XXL-JOB
 function xxlJobExportHandler() {
     dialog(function () {
         printLn('Please input args or 0(Exit)');
@@ -228,6 +225,12 @@ function xxlJobExportHandler() {
     });
 }
 
+//Global Config
+if (date_default_timezone_get() !== 'PRC') {
+    date_default_timezone_set('PRC');
+}
+
+//Run
 printLn(
         'Hello, I\'m javis.',
     'What can I do for you?'
