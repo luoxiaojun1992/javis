@@ -20,16 +20,27 @@ function dialog($chatBot) {
             exit(0);
         } elseif ($feedback === 4) {
             exit(1);
+        } elseif ($feedback === -1) {
+            return $feedback;
         }
     }
+    return null;
 }
 
-function optionsDialog($functionsPromotion, $functionHandlers, $outer = false) {
-    dialog(function () use ($functionsPromotion, $functionHandlers, $outer) {
+function optionsDialog($functionsPromotion, $functionHandlers, $root = false) {
+    return dialog(function () use ($functionsPromotion, $functionHandlers, $root) {
         printLn($functionsPromotion);
 
         $option = fgets(STDIN);
         $option = rtrim($option, PHP_EOL);
+
+        if ($option === '-1') {
+            if ($root) {
+                return 3;
+            } else {
+                return -1;
+            }
+        }
 
         if (!ctype_digit($option)) {
             printLn('Invalid option');
@@ -37,7 +48,7 @@ function optionsDialog($functionsPromotion, $functionHandlers, $outer = false) {
         }
 
         if ($option === '0') {
-            if ($outer) {
+            if ($root) {
                 return 3;
             } else {
                 return 2;
@@ -49,7 +60,10 @@ function optionsDialog($functionsPromotion, $functionHandlers, $outer = false) {
             return 1;
         }
 
-        call_user_func($functionHandlers[$option]);
+        $result = call_user_func($functionHandlers[$option]);
+        if (($result === -1) && (!$root)) {
+            return -1;
+        }
 
         return null;
     });
@@ -90,18 +104,22 @@ EOF;
         '2' => 'zipkinAggReportHandler',
     ];
 
-    optionsDialog($functionsPromotion, $functionHandlers);
+    return optionsDialog($functionsPromotion, $functionHandlers);
 }
 
 function zipkinWeeklyReportHandler() {
-    dialog(function () {
-        printLn('Please input args or 0(Exit)');
+    return dialog(function () {
+        printLn('Please input args or 0(Exit) or -1(Go to Root)');
 
         $args = fgets(STDIN);
         $args = rtrim($args, PHP_EOL);
 
         if ($args === '0') {
             return 2;
+        }
+
+        if ($args === '-1') {
+            return -1;
         }
 
         shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/zipkin/zipkinReport.php ' . $args);
@@ -111,14 +129,18 @@ function zipkinWeeklyReportHandler() {
 }
 
 function zipkinAggReportHandler() {
-    dialog(function () {
-        printLn('Please press enter or input 0(Exit)');
+    return dialog(function () {
+        printLn('Please press enter or input 0(Exit) or -1(Go to Root)');
 
         $args = fgets(STDIN);
         $args = rtrim($args, PHP_EOL);
 
         if ($args === '0') {
             return 2;
+        }
+
+        if ($args === '-1') {
+            return -1;
         }
 
         printLn('Generating agg report...');
@@ -138,14 +160,18 @@ function zipkinAggReportHandler() {
 
 //Review Bot
 function dirReviewBotHandler() {
-    dialog(function () {
-        printLn('Please input dir path or 0(Exit)');
+    return dialog(function () {
+        printLn('Please input dir path or 0(Exit) or -1(Go to Root)');
 
         $option = fgets(STDIN);
         $option = rtrim($option, PHP_EOL);
 
         if ($option === '0') {
             return 2;
+        }
+
+        if ($option === '-1') {
+            return -1;
         }
 
         printLn(json_encode((new \Lxj\Review\Bot\Bot(
@@ -158,14 +184,18 @@ function dirReviewBotHandler() {
 }
 
 function gitReviewBotHandler() {
-    dialog(function () {
-        printLn('Please input merge request url or 0(Exit)');
+    return dialog(function () {
+        printLn('Please input merge request url or 0(Exit) or -1(Go to Root)');
 
         $option = fgets(STDIN);
         $option = rtrim($option, PHP_EOL);
 
         if ($option === '0') {
             return 2;
+        }
+
+        if ($option === '-1') {
+            return -1;
         }
 
         printLn(json_encode((new \Lxj\Review\Bot\GitBot(
@@ -193,7 +223,7 @@ EOF;
         '2' => 'gitReviewBotHandler',
     ];
 
-    optionsDialog($functionsPromotion, $functionHandlers);
+    return optionsDialog($functionsPromotion, $functionHandlers);
 }
 
 //REPL
@@ -209,14 +239,18 @@ function phpREPLHandler() {
 
 //XXL-JOB
 function xxlJobExportHandler() {
-    dialog(function () {
-        printLn('Please input args or 0(Exit)');
+    return dialog(function () {
+        printLn('Please input args or 0(Exit) or -1(Go to Root)');
 
         $args = fgets(STDIN);
         $args = rtrim($args, PHP_EOL);
 
         if ($args === '0') {
             return 2;
+        }
+
+        if ($args === '-1') {
+            return -1;
         }
 
         shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/xxl-job/convertToCrontab.php ' . $args);
