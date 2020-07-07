@@ -29,7 +29,7 @@ function fetchXXLJobTasks($callback)
         } else {
             $xxlJobTaskCnt = 0;
         }
-    } while (($xxlJobTaskCnt > 0) && ($xxlJobTaskCnt < $limit));
+    } while ($xxlJobTaskCnt >= $limit);
 }
 
 function filterGlueMark($glueMark)
