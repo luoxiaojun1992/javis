@@ -8,7 +8,8 @@
     "psy/psysh": "0.9.9",
     "nesbot/carbon": "1.25.0",
     "luoxiaojun/review-bot": "dev-master",
-    "ext-json": "*"
+    "ext-json": "*",
+    "knplabs/github-api": "^2.0"
   },
   "authors": [
     {
