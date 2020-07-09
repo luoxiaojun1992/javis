@@ -9,7 +9,8 @@
     "nesbot/carbon": "1.25.0",
     "luoxiaojun/review-bot": "dev-master",
     "ext-json": "*",
-    "knplabs/github-api": "^2.0"
+    "knplabs/github-api": "^2.0",
+    "pear/console_table": "~1.3.1"
   },
   "authors": [
     {

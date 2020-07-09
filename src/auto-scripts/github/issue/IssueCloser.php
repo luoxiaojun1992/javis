@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/../../../vendor/autoload.php';
+require __DIR__ . '/../../../../vendor/autoload.php';
 
 function issueWithQuestion($issue)
 {
@@ -48,7 +48,7 @@ function addIssueComment($client, $issue, $user, $repo, $comment)
     );
 }
 
-$config = require __DIR__ . '/config/github.php';
+$config = require __DIR__ . '/../config/github.php';
 
 $client = new \Github\Client();
 
