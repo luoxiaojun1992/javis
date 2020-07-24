@@ -5,7 +5,7 @@ require __DIR__ . '/../../../../vendor/autoload.php';
 function issueWithQuestion($issue)
 {
     foreach ($issue['labels'] as $label) {
-        if (in_array($label['name'], ['question', 'invalid', 'documentation'])) {
+        if (in_array($label['name'], ['question', 'invalid', 'wontfix'])) {
             return true;
         }
     }
