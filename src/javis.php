@@ -78,6 +78,7 @@ Please tell me your option:
 2. review bot
 3. php repl
 4. xxl-job cron exporter
+5. github bot
 EOF;
 
     $functionHandlers = [
@@ -85,6 +86,7 @@ EOF;
         '2' => 'reviewBotHandler',
         '3' => 'phpREPLHandler',
         '4' => 'xxlJobExportHandler',
+        '5' => 'githubBotHandler',
     ];
 
     optionsDialog($functionsPromotion, $functionHandlers, true);
@@ -254,6 +256,28 @@ function xxlJobExportHandler() {
         }
 
         shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/xxl-job/convertToCrontab.php ' . $args);
+
+        return null;
+    });
+}
+
+//GITHUB Bot
+function githubBotHandler() {
+    return dialog(function () {
+        printLn('Please input args or 0(Exit) or -1(Go to Root)');
+
+        $args = fgets(STDIN);
+        $args = rtrim($args, PHP_EOL);
+
+        if ($args === '0') {
+            return 2;
+        }
+
+        if ($args === '-1') {
+            return -1;
+        }
+
+        //TODO
 
         return null;
     });
