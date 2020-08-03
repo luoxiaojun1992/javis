@@ -279,7 +279,65 @@ EOF;
 }
 
 function githubBotIssueHandler() {
+    $functionsPromotion = <<<EOF
+Please tell me your option:
+0. exit
+1. issue closer
+2. issue report
+EOF;
 
+    $functionHandlers = [
+        '1' => 'githubBotIssueCloserHandler',
+        '2' => 'githubBotIssueReportHandler',
+    ];
+
+    return optionsDialog($functionsPromotion, $functionHandlers);
+}
+
+function githubBotIssueCloserHandler() {
+    return dialog(function () {
+        printLn('Please press enter or input 0(Exit) or -1(Go to Root)');
+
+        $option = fgets(STDIN);
+        $option = rtrim($option, PHP_EOL);
+
+        if ($option === '0') {
+            return 2;
+        }
+
+        if ($option === '-1') {
+            return -1;
+        }
+
+        printLn('Closing...');
+
+        printLn(shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/github/issue/IssueCloser.php'));
+
+        return null;
+    });
+}
+
+function githubBotIssueReportHandler() {
+    return dialog(function () {
+        printLn('Please press enter or input 0(Exit) or -1(Go to Root)');
+
+        $option = fgets(STDIN);
+        $option = rtrim($option, PHP_EOL);
+
+        if ($option === '0') {
+            return 2;
+        }
+
+        if ($option === '-1') {
+            return -1;
+        }
+
+        printLn('Generating...');
+
+        printLn(shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/github/issue/IssueReport.php'));
+
+        return null;
+    });
 }
 
 function githubBotRepoHandler() {
