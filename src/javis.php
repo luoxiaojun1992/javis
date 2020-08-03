@@ -263,21 +263,43 @@ function xxlJobExportHandler() {
 
 //GITHUB Bot
 function githubBotHandler() {
+    $functionsPromotion = <<<EOF
+Please tell me your option:
+0. exit
+1. issue
+2. repo
+EOF;
+
+    $functionHandlers = [
+        '1' => 'githubBotIssueHandler',
+        '2' => 'githubBotRepoHandler',
+    ];
+
+    return optionsDialog($functionsPromotion, $functionHandlers);
+}
+
+function githubBotIssueHandler() {
+
+}
+
+function githubBotRepoHandler() {
     return dialog(function () {
-        printLn('Please input args or 0(Exit) or -1(Go to Root)');
+        printLn('Please press enter or input 0(Exit) or -1(Go to Root)');
 
-        $args = fgets(STDIN);
-        $args = rtrim($args, PHP_EOL);
+        $option = fgets(STDIN);
+        $option = rtrim($option, PHP_EOL);
 
-        if ($args === '0') {
+        if ($option === '0') {
             return 2;
         }
 
-        if ($args === '-1') {
+        if ($option === '-1') {
             return -1;
         }
 
-        //TODO
+        printLn('Generating...');
+
+        printLn(shell_exec('/usr/bin/env php ' . __DIR__ . '/auto-scripts/github/repo/RepoReporter.php'));
 
         return null;
     });
