@@ -607,19 +607,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/luoxiaojun1992/review-bot.git",
-                "reference": "ee696ad9600f1fa29526f4a42abe38a282cfce90"
+                "reference": "c60752069cc0b483ea53bab9df58e3c276ca4ec5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/luoxiaojun1992/review-bot/zipball/ee696ad9600f1fa29526f4a42abe38a282cfce90",
-                "reference": "ee696ad9600f1fa29526f4a42abe38a282cfce90",
+                "url": "https://api.github.com/repos/luoxiaojun1992/review-bot/zipball/c60752069cc0b483ea53bab9df58e3c276ca4ec5",
+                "reference": "c60752069cc0b483ea53bab9df58e3c276ca4ec5",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "m4tthumphrey/php-gitlab-api": "^9.13",
                 "nikic/php-parser": "~v4.2",
-                "php": ">=7.1",
+                "php": ">=7.2",
                 "php-http/guzzle6-adapter": "^1.0"
             },
             "type": "project",
@@ -639,7 +639,7 @@
                 }
             ],
             "description": "Code Review Robot",
-            "time": "2019-10-09T09:57:21+00:00"
+            "time": "2020-11-26T06:00:04+00:00"
         },
         {
             "name": "m4tthumphrey/php-gitlab-api",
