@@ -61,7 +61,7 @@ $response = $client->get(
 $taskListHtml = $response->getBody()->getContents();
 
 $taskList = [];
-$taskPageDom = \Sunra\PhpSimple\HtmlDomParser::str_get_html($taskListHtml);
+$taskPageDom = \KubAT\PhpSimple\HtmlDomParser::str_get_html($taskListHtml);
 $taskListDom = $taskPageDom->getElementById('taskTable')->children(1)->children;
 foreach ($taskListDom as $taskDom) {
     $taskList[] = [
