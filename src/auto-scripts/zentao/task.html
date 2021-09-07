@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang='zh-cn'>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <title>地盘-我的任务 - 禅道</title>
+    <script>window.config = {
+        "webRoot": "\/",
+        "debug": false,
+        "appName": "",
+        "cookieLife": 30,
+        "requestType": "GET",
+        "requestFix": "-",
+        "moduleVar": "m",
+        "methodVar": "f",
+        "viewVar": "t",
+        "defaultView": "html",
+        "themeRoot": "\/theme\/",
+        "currentModule": "my",
+        "currentMethod": "task",
+        "clientLang": "zh-cn",
+        "requiredFields": "",
+        "router": "\/index.php",
+        "save": "\u4fdd\u5b58",
+        "runMode": "",
+        "timeout": 30000,
+        "pingInterval": ""
+    };
+    window.lang = {
+        "submitting": "\u7a0d\u5019...",
+        "save": "\u4fdd\u5b58",
+        "expand": "\u5c55\u5f00\u5168\u90e8",
+        "timeout": "\u8fde\u63a5\u8d85\u65f6\uff0c\u8bf7\u68c0\u67e5\u7f51\u7edc\u73af\u5883\uff0c\u6216\u91cd\u8bd5\uff01"
+    };
+
+    </script>
+    <script>config.onlybody = "no";</script>
+    <link rel='stylesheet' href='/theme/default/zh-cn.default.css?v=15.0' type='text/css' media='screen'/>
+    <script src='/js/all.js?v=15.0'></script>
+    <style>.dropdown-menu.with-search {
+        padding: 0;
+        min-width: 150px;
+        overflow: hidden;
+        max-height: 302px;
+    }
+
+    .dropdown-menu > .menu-search .input-group {
+        width: 100%;
+    }
+
+    .dropdown-menu > .menu-search .input-group-addon {
+        position: absolute;
+        right: 10px;
+        top: 0;
+        z-index: 10;
+        background: none;
+        border: none;
+        color: #666;
+    }
+
+    .dropdown-menu > .menu-search .form-control {
+        border: none !important;
+        box-shadow: none !important;
+        border-top: 1px solid #ddd !important;
+    }
+
+    .dropdown-list {
+        display: block;
+        padding: 0;
+        max-height: 270px;
+        overflow-y: auto;
+    }
+
+    .dropdown-list > li > a {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.53846154;
+        color: #141414;
+        white-space: nowrap;
+    }
+
+    .dropdown-list > li > a:hover,
+    .dropdown-list > li > a:focus {
+        color: #1a4f85;
+        text-decoration: none;
+        background-color: #ddd;
+    }
+
+    .btn-toolbar .nav-title {
+        float: left;
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 13px;
+        font-weight: bolder;
+        line-height: 18px;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .c-hours {
+        text-align: right;
+    }
+
+    td.delayed {
+        background: #e84e0f !important;
+        color: white;
+    }
+
+    .table-children {
+        border-left: 2px solid #cbd0db;
+        border-right: 2px solid #cbd0db;
+    }
+
+    .table tbody > tr.table-children.table-child-top {
+        border-top: 2px solid #cbd0db;
+    }
+
+    .table tbody > tr.table-children.table-child-bottom {
+        border-bottom: 2px solid #cbd0db;
+    }
+
+    .table td.has-child > a:not(.task-toggle) {
+        max-width: 90%;
+        max-width: calc(100% - 30px);
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .table td.has-child > .task-toggle {
+        color: #838a9d;
+        position: relative;
+        top: 1px;
+        line-height: 16px;
+    }
+
+    .table td.has-child > .task-toggle:hover {
+        color: #006af1;
+        cursor: pointer;
+    }
+
+    .table td.has-child > .task-toggle > .icon {
+        font-size: 16px;
+        display: inline-block;
+        transition: transform .2s;
+        -ms-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+    }
+
+    .table td.has-child > .task-toggle > .icon:before {
+        text-align: left;
+    }
+
+    .table td.has-child > .task-toggle.collapsed {
+        top: 2px;
+    }
+
+    .table td.has-child > .task-toggle.collapsed > .icon {
+        -ms-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .table td.c-hours {
+        padding-right: 12px;
+    }
+
+    .main-table tbody > tr.table-children > td:first-child::before {
+        width: 3px;
+    }
+
+    @-moz-document url-prefix() {
+        .main-table tbody > tr.table-children > td:first-child::before {
+            width: 4px;
+        }
+    ;
+    }
+
+    .jing-btn-color-red {
+        color: red !important
+    }
+    </style>
+    <link rel='icon' href='/favicon.ico' type='image/x-icon'/>
+    <link rel='shortcut icon' href='/favicon.ico' type='image/x-icon'/>
+    <!--[if lt IE 10]>
+    <script src='/js/jquery/placeholder/min.js?v=15.0'></script>
+    <![endif]-->
+</head>
+<body>
+<style>
+    .picker-single .picker-selection-remove {
+        z-index: 1000;
+    }
+
+    .picker-selection-single:after, .picker-multi.picker-focus .picker-selections:before {
+        font-family: ZentaoIcon !important;
+        content: '\f0d7' !important;
+    }
+</style>
+<script>
+    var chooseUsersToMail = '选择要发信通知的用户...';
+    if ($.fn.picker) {
+        $(document).ready(function () {
+            $(".picker-select[data-pickertype!='remote']").picker({chosenMode: true});
+            $("[data-pickertype='remote']").each(function () {
+                var pickerremote = $(this).attr('data-pickerremote');
+                $(this).picker({chosenMode: true, remote: pickerremote});
+            })
+        });
+    }
+</script>
+<header id='header'>
+    <div id='mainHeader'>
+        <div class='container'>
+            <div id='heading'>
+                <div class='btn-group header-btn'><a href='/index.php?m=my&f=index' class='btn'><i
+                        class='icon icon-menu-my'></i> 地盘</a>
+                </div>
+            </div>
+            <nav id='navbar'>
+                <ul class='nav nav-default'>
+                    <li class=' ' data-id='index'><a href='/index.php?m=my&f=index'>仪表盘</a>
+                    </li>
+                    <li class=' ' data-id='calendar'><a href='/index.php?m=my&f=calendar'>日程</a>
+                    </li>
+                    <li class='divider'></li>
+                    <li class=' active' data-id='work'><a href='/index.php?m=my&f=work&mode=task'>待处理</a>
+                    </li>
+                    <li class=' ' data-id='project'><a href='/index.php?m=my&f=project'>项目</a>
+                    </li>
+                    <li class=' ' data-id='contribute'><a href='/index.php?m=my&f=contribute&mode=task'>贡献</a>
+                    </li>
+                    <li class='divider'></li>
+                    <li class=' ' data-id='dynamic'><a href='/index.php?m=my&f=dynamic'>动态</a>
+                    </li>
+                    <li class=' ' data-id='contacts'><a href='/index.php?m=my&f=managecontacts'>联系人</a>
+                    </li>
+                </ul>
+            </nav>
+            <div id='toolbar'>
+                <div id='userMenu'>
+                    <ul id="userNav" class="nav nav-default">
+                        <li class='dropdown dropdown-hover has-avatar'><a class='dropdown-toggle'
+                                                                          data-toggle='dropdown'>
+                            <div id='main-avatar' class='avatar avatar bg-secondary avatar-circle'>R</div>
+                        </a>
+                            <ul class='dropdown-menu pull-right'>
+                                <li class="user-profile-item"><a href='/index.php?m=my&f=profile&onlybody=yes'
+                                                                 data-width='600' class='iframe  no-role'>
+                                    <div id='menu-avatar' class='avatar avatar bg-secondary avatar-circle'>R</div>
+                                    <div class="user-profile-name">Roy(罗晓俊)</div>
+                                    <div class="user-profile-role"></div>
+                                </a></li>
+                                <li class="divider"></li>
+                                <li><a href='/index.php?m=my&f=profile&onlybody=yes' class='iframe' data-width='600'><i
+                                        class='icon icon-account'></i> 个人档案</a>
+                                </li>
+                                <li><a href='/index.php?m=my&f=preference&onlybody=yes' class='iframe' data-width='650'><i
+                                        class='icon icon-controls'></i> 个性化设置</a>
+                                </li>
+                                <li><a href='/index.php?m=my&f=changepassword&onlybody=yes' class='iframe'
+                                       data-width='600'><i class='icon icon-cog-outline'></i> 修改密码</a>
+                                </li>
+                                <li class='divider'></li>
+                                <li class='dropdown-submenu top'><a href='javascript:;'><i class='icon icon-theme'></i>
+                                    主题</a>
+                                    <ul class='dropdown-menu pull-left'>
+                                        <li class='selected'><a href='javascript:selectTheme("default");'
+                                                                data-value='default'>禅道蓝（默认）</a></li>
+                                        <li><a href='javascript:selectTheme("green");' data-value='green'>叶兰绿</a></li>
+                                        <li><a href='javascript:selectTheme("red");' data-value='red'>赤诚红</a></li>
+                                        <li><a href='javascript:selectTheme("purple");' data-value='purple'>玉烟紫</a></li>
+                                        <li><a href='javascript:selectTheme("pink");' data-value='pink'>芙蕖粉</a></li>
+                                        <li><a href='javascript:selectTheme("blackberry");'
+                                               data-value='blackberry'>露莓黑</a></li>
+                                        <li><a href='javascript:selectTheme("classic");' data-value='classic'>经典蓝</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class='dropdown-submenu top'><a href='javascript:;'><i class='icon icon-lang'></i>
+                                    Language</a>
+                                    <ul class='dropdown-menu pull-left'>
+                                        <li class='selected'><a href='javascript:selectLang("zh-cn");'>简体</a></li>
+                                        <li><a href='javascript:selectLang("zh-tw");'>繁體</a></li>
+                                        <li><a href='javascript:selectLang("en");'>English</a></li>
+                                    </ul>
+                                </li>
+                                <li class='dropdown-submenu'><a data-toggle='dropdown'><i class='icon icon-help'></i> 帮助</a>
+                                    <ul class='dropdown-menu pull-left'>
+                                        <li><a href='https://www.zentao.net/book/zentaopmshelp.html?fullScreen=zentao'
+                                               class='open-in-app' id='helpLink' data-app='help'>手册</a>
+                                        </li>
+                                        <li><a href='/index.php?m=misc&f=changeLog' class='iframe' data-width='800'
+                                               data-headerless='true' data-backdrop='true' data-keyboard='true'>修改日志</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a href='/index.php?m=misc&f=about' class='about iframe' data-width='1050'
+                                       data-headerless='true' data-backdrop='true' data-keyboard='true'
+                                       data-class='modal-about'><i class='icon icon-about'></i> 关于禅道</a>
+                                </li>
+                                <li><a href='https://api.zentao.net/goto.php?item=aiux' class='link-aiux'
+                                       target='_blank'><i class='icon icon-aiux'></i> 艾体验设计</a></li>
+                                <li class="divider"></li>
+                                <li><a href='/index.php?m=user&f=logout' target='_top'><i class='icon icon-exit'></i> 退出</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id='subHeader'>
+        <div class='container'>
+            <div id="pageNav" class='btn-toolbar'></div>
+            <nav id='subNavbar'>
+                <ul class='nav nav-default'>
+                    <li class=' ' data-id='task'><a href='/index.php?m=my&f=work&mode=task'>任务</a>
+                    </li>
+                    <li class=' ' data-id='story'><a href='/index.php?m=my&f=work&mode=story'>研发需求</a>
+                    </li>
+                    <li class=' ' data-id='bug'><a href='/index.php?m=my&f=work&mode=bug'>Bug</a>
+                    </li>
+                    <li class=' ' data-id='testcase'><a
+                            href='/index.php?m=my&f=work&mode=testcase&type=assigntome'>用例</a>
+                    </li>
+                    <li class=' ' data-id='testtask'><a href='/index.php?m=my&f=work&mode=testtask&type=wait'>测试单</a>
+                    </li>
+                </ul>
+            </nav>
+            <div id="pageActions">
+                <div class='btn-toolbar'></div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    adjustMenuWidth();
+</script>
+<main id='main'>
+    <div class='container'>
+        <script>mode = "task";</script>
+        <script>total = 2;</script>
+        <script>rawMethod = "work";</script>
+        <div id="mainMenu" class="clearfix">
+            <div class="btn-toolbar pull-left">
+            </div>
+        </div>
+        <div id="mainContent">
+            <form id='myTaskForm' class="main-table table-task" method="post">
+                <table class="table has-sort-head table-fixed" id='taskTable'>
+                    <thead>
+                    <tr>
+                        <th class="c-id">
+                            <div class="checkbox-primary check-all" title="全选">
+                                <label></label>
+                            </div>
+                            <a href='/index.php?m=my&f=work&mode=task&type=assignedTo&orderBy=id_asc&recTotal=0&recPerPage=20&pageID=1'
+                               class='sort-down' data-app=my>ID</a>
+                        </th>
+                        <th class='c-pri w-40px'><a
+                                href='/index.php?m=my&f=work&mode=task&type=assignedTo&orderBy=pri_asc&recTotal=0&recPerPage=20&pageID=1'
+                                class='header' data-app=my>P</a>
+                        </th>
+                        <th class='c-name'><a
+                                href='/index.php?m=my&f=work&mode=task&type=assignedTo&orderBy=name_asc&recTotal=0&recPerPage=20&pageID=1'
+                                class='header' data-app=my>任务名称</a>
+                        </th>
+                        <th class='c-project w-120px'><a
+                                href='/index.php?m=my&f=work&mode=task&type=assignedTo&orderBy=execution_asc&recTotal=0&recPerPage=20&pageID=1'
+                                class='header' data-app=my>所属迭代</a>
+                        </th>
+                        <th class='c-user w-90px'><a
+                                href='/index.php?m=my&f=work&mode=task&type=assignedTo&orderBy=openedBy_asc&recTotal=0&recPerPage=20&pageID=1'
+                                class='header' data-app=my>创建</a>
+                        </th>
+                        <th class='c-user w-100px'><a
+                                href='/index.php?m=my&f=work&mode=task&type=assignedTo&orderBy=finishedBy_asc&recTotal=0&recPerPage=20&pageID=1'
+                                class='header' data-app=my>由谁完成</a>
+                        </th>
+                        <th class='c-hours w-50px'><a
+                                href='/index.php?m=my&f=work&mode=task&type=assignedTo&orderBy=estimate_asc&recTotal=0&recPerPage=20&pageID=1'
+                                class='header' data-app=my>预计</a>
+                        </th>
+                        <th class='c-hours w-50px'><a
+                                href='/index.php?m=my&f=work&mode=task&type=assignedTo&orderBy=consumed_asc&recTotal=0&recPerPage=20&pageID=1'
+                                class='header' data-app=my>消耗</a>
+                        </th>
+                        <th class='c-hours w-50px'><a
+                                href='/index.php?m=my&f=work&mode=task&type=assignedTo&orderBy=left_asc&recTotal=0&recPerPage=20&pageID=1'
+                                class='header' data-app=my>剩余</a>
+                        </th>
+                        <th class='c-status w-70px'><a
+                                href='/index.php?m=my&f=work&mode=task&type=assignedTo&orderBy=status_asc&recTotal=0&recPerPage=20&pageID=1'
+                                class='header' data-app=my>状态</a>
+                        </th>
+                        <th class='c-actions-6' style="width:210px"> 操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-id='1532' data-status='doing' data-estimate='40' data-consumed='8' data-left='32'>
+                        <td class="c-id">
+                            <div class="checkbox-primary">
+                                <input type='checkbox' name='taskIDList[]' value='1532'/>
+                                <label></label>
+                            </div>
+                            1532
+                        </td>
+                        <td class="c-pri"><span class='label-pri label-pri-2' title='2'>2</span></td>
+                        <td class='c-name ' title='survey2.0的技术方案'>
+                            <a href='/index.php?m=task&f=view&taskID=1532' style='color: ' data-group='execution'>survey2.0的技术方案</a>
+                        </td>
+                        <td class='c-project' title="需求评审和技术方案"><a href='/index.php?m=execution&f=task&executionID=242'
+                                                                   data-group='execution'>需求评审和技术方案</a>
+                        </td>
+                        <td class='c-user'>vicky</td>
+                        <td class='c-user'></td>
+                        <td class='c-hours' title="40 工时">40h</td>
+                        <td class='c-hours' title="8 工时">8h</td>
+                        <td class='c-hours' title="32 工时">32h</td>
+                        <td class='c-status'>
+                            <span class='status-task status-doing'> 进行中</span></td>
+                        <td class='c-actions'>
+                            <button type='button' class='disabled btn iframe'><i
+                                    class='icon-task-start disabled icon-play' title='开始' data-app="my"></i></button>
+                            <button type='button' class='disabled btn iframe'><i
+                                    class='icon-task-close disabled icon-off' title='关闭' data-app="my"></i></button>
+                            <a href='/index.php?m=task&f=finish&taskID=1532&onlybody=yes' class='btn iframe' title='完成'
+                               data-app="my"><i class='icon-task-finish icon-checked'></i></a>
+                            <a href='/index.php?m=execution&f=bug&execution=242&productID=0&orderBy=status&build=0&type=all&params=0&recTotal=0&recPerPage=20&pageID=1&taskId=1532'
+                               class='btn ' title='Bug列表' data-app="my"><i class='icon-execution-bug icon-bug'></i></a>
+                            <a href='/index.php?m=task&f=recordEstimate&taskID=1532&onlybody=yes' class='btn iframe'
+                               title='工时' data-app="my"><i class='icon-task-recordEstimate icon-time'></i></a>
+                            <a href='/index.php?m=task&f=edit&taskID=1532&onlybody=yes' class='btn iframe' title='编辑任务'
+                               data-width='95%' data-app="my"><i class='icon-common-edit icon-edit'></i></a>
+                            <a href='/index.php?m=task&f=batchCreate&executionID=242&storyID=0&moduleID=0&taskID=1532&ifame=true&onlybody=yes'
+                               class='btn iframe' title='子任务' data-width='95%' data-app="my"><i
+                                    class='icon-task-batchCreate icon-split'></i></a>
+                        </td>
+                    </tr>
+                    <tr data-id='1371' data-status='doing' data-estimate='16' data-consumed='7' data-left='9'>
+                        <td class="c-id">
+                            <div class="checkbox-primary">
+                                <input type='checkbox' name='taskIDList[]' value='1371'/>
+                                <label></label>
+                            </div>
+                            1371
+                        </td>
+                        <td class="c-pri"><span class='label-pri label-pri-3' title='3'>3</span></td>
+                        <td class='c-name ' title='测试禅道'>
+                            <a href='/index.php?m=task&f=view&taskID=1371' style='color: '
+                               data-group='execution'>测试禅道</a>
+                        </td>
+                        <td class='c-project' title="【JINGLead】- Sprint 179 - 迭代"><a
+                                href='/index.php?m=execution&f=task&executionID=223' data-group='execution'>【JINGLead】-
+                            Sprint 179 - 迭代</a>
+                        </td>
+                        <td class='c-user'>Roy(罗晓俊)</td>
+                        <td class='c-user'></td>
+                        <td class='c-hours' title="16 工时">16h</td>
+                        <td class='c-hours' title="7 工时">7h</td>
+                        <td class='c-hours' title="9 工时">9h</td>
+                        <td class='c-status'>
+                            <span class='status-task status-doing'> 进行中</span></td>
+                        <td class='c-actions'>
+                            <button type='button' class='disabled btn iframe'><i
+                                    class='icon-task-start disabled icon-play' title='开始' data-app="my"></i></button>
+                            <button type='button' class='disabled btn iframe'><i
+                                    class='icon-task-close disabled icon-off' title='关闭' data-app="my"></i></button>
+                            <a href='/index.php?m=task&f=finish&taskID=1371&onlybody=yes' class='btn iframe' title='完成'
+                               data-app="my"><i class='icon-task-finish icon-checked'></i></a>
+                            <a href='/index.php?m=execution&f=bug&execution=223&productID=0&orderBy=status&build=0&type=all&params=0&recTotal=0&recPerPage=20&pageID=1&taskId=1371'
+                               class='btn ' title='Bug列表' data-app="my"><i class='icon-execution-bug icon-bug'></i></a>
+                            <a href='/index.php?m=task&f=recordEstimate&taskID=1371&onlybody=yes' class='btn iframe'
+                               title='工时' data-app="my"><i class='icon-task-recordEstimate icon-time'></i></a>
+                            <a href='/index.php?m=task&f=edit&taskID=1371&onlybody=yes' class='btn iframe' title='编辑任务'
+                               data-width='95%' data-app="my"><i class='icon-common-edit icon-edit'></i></a>
+                            <a href='/index.php?m=task&f=batchCreate&executionID=223&storyID=0&moduleID=0&taskID=1371&ifame=true&onlybody=yes'
+                               class='btn iframe' title='子任务' data-width='95%' data-app="my"><i
+                                    class='icon-task-batchCreate icon-split'></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="table-footer">
+                    <div class="checkbox-primary check-all"><label>全选</label></div>
+                    <div class="table-actions btn-toolbar">
+                        <button type='button' class='btn' data-form-action='/index.php?m=task&f=batchEdit'>编辑</button>
+                        <button type='button' class='btn'
+                                onclick="setFormAction('/index.php?m=task&f=batchClose', 'hiddenwin')">关闭
+                        </button>
+                    </div>
+                    <div class="table-statistic">本页共 <strong>2</strong> 个任务，未开始 <strong>0</strong>，进行中
+                        <strong>2</strong>，总预计 <strong>56</strong> 工时，已消耗 <strong>15</strong> 工时，剩余 <strong>41</strong>
+                        工时。
+                    </div>
+                    <ul class='pager' data-page-cookie='pagerMyTask' data-ride='pager' data-rec-total='2'
+                        data-rec-per-page='20' data-page='1'
+                        data-link-creator='/index.php?m=my&f=work&mode=task&type=assignedTo&orderBy=id_desc&recTotal=2&recPerPage={recPerPage}&pageID={page}'></ul>
+                </div>
+            </form>
+        </div>
+        <script>tasks = {
+            "1532": {
+                "id": "1532",
+                "project": "241",
+                "parent": "0",
+                "execution": "242",
+                "module": "0",
+                "design": "0",
+                "story": "0",
+                "storyVersion": "1",
+                "designVersion": "0",
+                "fromBug": "0",
+                "name": "survey2.0\u7684\u6280\u672f\u65b9\u6848",
+                "type": "request",
+                "pri": "2",
+                "estimate": "40",
+                "consumed": "8",
+                "left": "32",
+                "deadline": "0000-00-00",
+                "status": "doing",
+                "jingstatus": "uncommitted",
+                "subStatus": "",
+                "color": "",
+                "mailto": "",
+                "desc": "<p>1 - survey2.0\u7684\u4f1a\u8bae<\/p>\n<p><br \/><\/p>\n<p><span>1 -&nbsp;<\/span><span>survey2.0\u7684<\/span><span>\u6280\u672f\u65b9\u6848<\/span><\/p>",
+                "version": "2",
+                "openedBy": "vicky",
+                "openedDate": "2021-09-03 18:36:31",
+                "assignedTo": "Roy",
+                "assignedDate": "2021-09-03 18:37:55",
+                "estStarted": "0000-00-00",
+                "realStarted": "2021-09-03 00:00:00",
+                "finishedBy": "",
+                "finishedDate": "0000-00-00 00:00:00",
+                "finishedList": "",
+                "canceledBy": "",
+                "canceledDate": "0000-00-00 00:00:00",
+                "closedBy": "",
+                "closedDate": "0000-00-00 00:00:00",
+                "planDuration": "0",
+                "realDuration": "0",
+                "closedReason": "",
+                "lastEditedBy": "Roy",
+                "lastEditedDate": "2021-09-03 18:37:55",
+                "activatedDate": "0000-00-00",
+                "deleted": "0",
+                "executionID": "242",
+                "executionName": "\u9700\u6c42\u8bc4\u5ba1\u548c\u6280\u672f\u65b9\u6848",
+                "storyID": null,
+                "storyTitle": null,
+                "storyStatus": null,
+                "latestStoryVersion": null,
+                "needConfirm": false,
+                "progress": 20
+            }, "1371": {
+                "id": "1371",
+                "project": "102",
+                "parent": "0",
+                "execution": "223",
+                "module": "0",
+                "design": "0",
+                "story": "0",
+                "storyVersion": "1",
+                "designVersion": "0",
+                "fromBug": "0",
+                "name": "\u6d4b\u8bd5\u7985\u9053",
+                "type": "study",
+                "pri": "3",
+                "estimate": "16",
+                "consumed": "7",
+                "left": "9",
+                "deadline": "2021-09-15",
+                "status": "doing",
+                "jingstatus": "uncommitted",
+                "subStatus": "",
+                "color": "",
+                "mailto": "",
+                "desc": "",
+                "version": "4",
+                "openedBy": "Roy",
+                "openedDate": "2021-08-27 18:07:10",
+                "assignedTo": "Roy",
+                "assignedDate": "2021-09-01 17:21:16",
+                "estStarted": "0000-00-00",
+                "realStarted": "2021-08-27 00:00:00",
+                "finishedBy": "",
+                "finishedDate": "0000-00-00 00:00:00",
+                "finishedList": "",
+                "canceledBy": "",
+                "canceledDate": "0000-00-00 00:00:00",
+                "closedBy": "",
+                "closedDate": "0000-00-00 00:00:00",
+                "planDuration": "0",
+                "realDuration": "0",
+                "closedReason": "",
+                "lastEditedBy": "cindy",
+                "lastEditedDate": "2021-09-01 17:21:16",
+                "activatedDate": "0000-00-00",
+                "deleted": "0",
+                "executionID": "223",
+                "executionName": "\u3010JINGLead\u3011- Sprint 179 - \u8fed\u4ee3",
+                "storyID": null,
+                "storyTitle": null,
+                "storyStatus": null,
+                "latestStoryVersion": null,
+                "needConfirm": false,
+                "progress": 44
+            }
+        };</script>
+        <script>
+            $(function () {
+                /* Update table summary text. */
+                var checkedSummary = '选中 <strong>%total%</strong> 个任务，未开始 <strong>%wait%</strong>，进行中 <strong>%doing%</strong>，总预计 <strong>%estimate%</strong> 工时，已消耗 <strong>%consumed%</strong> 工时，剩余 <strong>%left%</strong> 工时。';
+                var pageSummary = '本页共 <strong>%total%</strong> 个任务，未开始 <strong>%wait%</strong>，进行中 <strong>%doing%</strong>，总预计 <strong>%estimate%</strong> 工时，已消耗 <strong>%consumed%</strong> 工时，剩余 <strong>%left%</strong> 工时。';
+
+                $('#myTaskForm').table({
+                    statisticCreator: function (table) {
+                        var $table = table.getTable();
+                        var $checkedRows = $table.find(table.isDataTable ? '.datatable-row-left.checked' : 'tbody>tr.checked');
+                        var $originTable = table.isDataTable ? table.$.find('.datatable-origin') : null;
+                        var checkedTotal = $checkedRows.length;
+                        var $rows = checkedTotal ? $checkedRows : $table.find(table.isDataTable ? '.datatable-rows .datatable-row-left' : 'tbody>tr');
+
+                        var checkedWait = 0;
+                        var checkedDoing = 0;
+                        var checkedEstimate = 0;
+                        var checkedConsumed = 0;
+                        var checkedLeft = 0;
+                        var taskIdList = [];
+
+                        $rows.each(function () {
+                            var $row = $(this);
+                            if ($originTable) {
+                                $row = $originTable.find('tbody>tr[data-id="' + $row.data('id') + '"]');
+                            }
+                            var data = $row.data();
+                            taskIdList.push(data.id);
+
+                            var status = data.status;
+                            if (status === 'wait') checkedWait++;
+                            if (status === 'doing') checkedDoing++;
+
+                            var canStatistics = false;
+                            if (!$row.hasClass('table-children')) {
+                                canStatistics = true;
+                            } else {
+                                var parentID = 0;
+                                var classes = $row.attr('class').split(' ');
+                                for (i in classes) {
+                                    if (classes[i].indexOf('parent-') >= 0) parentID = classes[i].replace('parent-', '');
+                                }
+
+                                if (parentID && taskIdList.indexOf(parseInt(parentID)) < 0) canStatistics = true;
+                            }
+
+                            if (canStatistics) {
+                                checkedEstimate += Number(data.estimate);
+                                checkedConsumed += Number(data.consumed);
+                                if (status != 'cancel' && status != 'closed') checkedLeft += Number(data.left);
+                            }
+                        });
+                        return (checkedTotal ? checkedSummary : pageSummary).replace('%total%', $rows.length).replace('%wait%', checkedWait)
+                            .replace('%doing%', checkedDoing)
+                            .replace('%estimate%', checkedEstimate.toFixed(1))
+                            .replace('%consumed%', checkedConsumed.toFixed(1))
+                            .replace('%left%', checkedLeft.toFixed(1));
+                    }
+                })
+            });
+        </script>
+    </div>
+    <script>
+        $.initSidebar();
+    </script>
+
+    <iframe frameborder='0' name='hiddenwin' id='hiddenwin' scrolling='no' class='debugwin hidden'></iframe>
+
+</main>
+<div id="noticeBox"></div>
+<script>
+    /* Alert got messages. */
+    needPing = false;
+    $(function () {
+        var windowBlur = false;
+        if (window.Notification) {
+            window.onblur = function () {
+                windowBlur = true;
+            }
+            window.onfocus = function () {
+                windowBlur = false;
+            }
+        }
+        setInterval(function () {
+            $.get(createLink('message', 'ajaxGetMessage', "windowBlur=" + (windowBlur ? '1' : '0')), function (data) {
+                if (!windowBlur) {
+                    $('#noticeBox').append(data);
+                    adjustNoticePosition();
+                } else {
+                    if (data) {
+                        if (typeof data == 'string') data = $.parseJSON(data);
+                        if (typeof data.message == 'string') notifyMessage(data);
+                    }
+                }
+            });
+        }, 300000);
+    })
+
+</script>
+
+<script>$(function () {
+    if (typeof mode === 'string') {
+        $('#subNavbar li[data-id=' + mode + ']').addClass('active');
+        if (typeof rawMethod === 'string' && rawMethod == 'work') $('#subNavbar li[data-id=' + mode + '] a').append('<span class="label label-light label-badge">' + total + '</span>');
+    }
+    var scp = $('[data-id="changePassword"] a');
+    var sign = config.requestType == 'GET' ? '&' : '?';
+    scp.attr('href', scp.attr('href') + sign + 'onlybody=yes').modalTrigger({width: 500, type: 'iframe'});
+});
+$(function () {
+    $(document).on('click', '.task-toggle', function (e) {
+        var $toggle = $(this);
+        var id = $(this).data('id');
+        var isCollapsed = $toggle.toggleClass('collapsed').hasClass('collapsed');
+        $toggle.closest('[data-ride="table"]').find('tr.parent-' + id).toggle(!isCollapsed);
+
+        e.stopPropagation();
+        e.preventDefault();
+    });
+
+    $('#taskTable td.has-child .task-toggle').each(function () {
+        var $td = $(this).closest('td');
+        var labelWidth = 0;
+        if ($td.find('.label').length > 0) labelWidth = $td.find('.label').width();
+        $td.find('a').eq(0).css('max-width', $td.width() - labelWidth - 60);
+    });
+});
+
+</script>
+</body>
+</html>

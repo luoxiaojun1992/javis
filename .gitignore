@@ -1,0 +1,8 @@
+/src/auto-scripts/zipkin/config/*
+/.idea
+/vendor
+/src/auto-scripts/zipkin/output/*
+/src/config/review-robot/*
+/src/auto-scripts/xxl-job/config/*
+/src/auto-scripts/xxl-job/output/crontab.txt
+/src/auto-scripts/xxl-job/output/shell/*
