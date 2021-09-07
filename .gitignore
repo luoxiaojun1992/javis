@@ -6,3 +6,4 @@
 /src/auto-scripts/xxl-job/config/*
 /src/auto-scripts/xxl-job/output/crontab.txt
 /src/auto-scripts/xxl-job/output/shell/*
+.DS_Store
