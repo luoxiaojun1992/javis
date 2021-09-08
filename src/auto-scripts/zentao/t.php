@@ -9,8 +9,11 @@ if (date_default_timezone_get() != 'Asia/Shanghai') {
 $jar = new \GuzzleHttp\Cookie\CookieJar;
 $client = new \GuzzleHttp\Client();
 
+$zentaoConfig = require_once __DIR__ . '/config/zentao.php';
+$zentaoHost = $zentaoConfig['host'];
+
 $client->get(
-    'https://zentao.jingsocial.com/index.php?m=user&f=login',
+    $zentaoHost . '/index.php?m=user&f=login',
     [
         'cookies' => $jar,
         'headers' => [
@@ -20,7 +23,7 @@ $client->get(
 );
 
 $response = $client->get(
-    'https://zentao.jingsocial.com/index.php?m=user&f=refreshRandom&t=html',
+    $zentaoHost . '/index.php?m=user&f=refreshRandom&t=html',
     [
         'cookies' => $jar,
         'headers' => [
@@ -34,7 +37,7 @@ $rand = $response->getBody()->getContents();
 $accountConfig = require_once __DIR__ . '/config/account.php';
 
 $client->post(
-    'https://zentao.jingsocial.com/index.php?m=user&f=login&t=html',
+    $zentaoHost . '/index.php?m=user&f=login&t=html',
     [
         'cookies' => $jar,
         'headers' => [
@@ -53,7 +56,7 @@ $client->post(
 );
 
 $response = $client->get(
-    'https://zentao.jingsocial.com/index.php?m=my&f=work&mode=task',
+    $zentaoHost . '/index.php?m=my&f=work&mode=task',
     [
         'cookies' => $jar,
         'headers' => [
@@ -79,10 +82,10 @@ foreach ($taskListDom as $taskDom) {
     ];
 }
 
-$setWorkingTime = function($taskId, $date, $consumed, $left) use ($client, $jar)
+$setWorkingTime = function($taskId, $date, $consumed, $left) use ($client, $jar, $zentaoHost)
 {
     $response = $client->get(
-        'https://zentao.jingsocial.com/index.php?m=task&f=recordEstimate&taskID='.$taskId.'&onlybody=yes',
+        $zentaoHost . '/index.php?m=task&f=recordEstimate&taskID='.$taskId.'&onlybody=yes',
         [
             'cookies' => $jar,
             'headers' => [
@@ -92,7 +95,7 @@ $setWorkingTime = function($taskId, $date, $consumed, $left) use ($client, $jar)
     );
 
     $response = $client->post(
-        'https://zentao.jingsocial.com/index.php?m=task&f=recordEstimate&taskID='.$taskId.'&onlybody=yes',
+        $zentaoHost . '/index.php?m=task&f=recordEstimate&taskID='.$taskId.'&onlybody=yes',
         [
             'cookies' => $jar,
             'headers' => [
