@@ -2,6 +2,10 @@
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
+if (date_default_timezone_get() != 'Asia/Shanghai') {
+    date_default_timezone_set('Asia/Shanghai');
+}
+
 $jar = new \GuzzleHttp\Cookie\CookieJar;
 $client = new \GuzzleHttp\Client();
 
