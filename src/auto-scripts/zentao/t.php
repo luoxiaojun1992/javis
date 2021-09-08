@@ -66,7 +66,9 @@ $taskListHtml = $response->getBody()->getContents();
 
 $taskList = [];
 $taskPageDom = \KubAT\PhpSimple\HtmlDomParser::str_get_html($taskListHtml);
-$taskListDom = $taskPageDom->getElementById('taskTable')->children(1)->children;
+$taskTableDom = $taskPageDom->getElementById('taskTable');
+$taskListDom = $taskTableDom ? $taskPageDom->children(1) : null;
+$taskListDom = $taskListDom ? $taskListDom->children : [];
 foreach ($taskListDom as $taskDom) {
     $taskList[] = [
         'task_id' => intval($taskDom->getAttribute('data-id')),
