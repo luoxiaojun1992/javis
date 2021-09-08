@@ -153,7 +153,7 @@ foreach ($taskList as $task) {
 }
 
 $taskLeftList = array_column($filteredTaskList, 'task_left');
-array_multisort($filteredTaskList,$taskLeftList);
+array_multisort($taskLeftList, SORT_ASC, $filteredTaskList);
 
 $estWorkingTime = $taskConfig['est_working_time'];
 foreach ($filteredTaskList as $i => $task) {
