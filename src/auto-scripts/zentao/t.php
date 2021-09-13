@@ -11,7 +11,7 @@ $client = new \GuzzleHttp\Client();
 
 $response = $client->get('http://tool.bitefu.net/jiari/?d=' . date('Y-m-d'));
 $flag = intval($response->getBody()->getContents());
-if (in_array($flag, [0, 1, 2])) {
+if (in_array($flag, [1, 2])) {
     echo 'Today is a holiday', PHP_EOL;
     exit(0);
 }
