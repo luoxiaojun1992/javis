@@ -9,6 +9,13 @@ if (date_default_timezone_get() != 'Asia/Shanghai') {
 $jar = new \GuzzleHttp\Cookie\CookieJar;
 $client = new \GuzzleHttp\Client();
 
+$response = $client->get('http://tool.bitefu.net/jiari/?d=' . date('Y-m-d'));
+$flag = intval($response->getBody()->getContents());
+if (in_array($flag, [0, 1, 2])) {
+    echo 'Today is a holiday', PHP_EOL;
+    exit(0);
+}
+
 $zentaoConfig = require_once __DIR__ . '/config/zentao.php';
 $zentaoHost = $zentaoConfig['host'];
 
