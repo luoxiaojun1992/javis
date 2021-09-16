@@ -16,6 +16,9 @@ if (in_array($flag, [1, 2])) {
     exit(0);
 }
 
+mt_srand(time());
+sleep(mt_rand(0, 300));
+
 $zentaoConfig = require_once __DIR__ . '/config/zentao.php';
 $zentaoHost = $zentaoConfig['host'];
 
