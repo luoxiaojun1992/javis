@@ -16,6 +16,23 @@ if (in_array($flag, [1, 2])) {
     exit(0);
 }
 
+$holidaysConfig = require_once __DIR__ . '/config/holidays.php';
+$holidays = $holidaysConfig['holidays'];
+foreach ($holidays as $holiday) {
+    if (is_array($holiday)) {
+        $nowTime = time();
+        if ((strtotime($holiday[0]) <= $nowTime) && (strtotime($holiday[1]) >= $nowTime)) {
+            echo 'Today is a holiday', PHP_EOL;
+            exit(0);
+        }
+    } else {
+        if ($holiday === date('Y-m-d')) {
+            echo 'Today is a holiday', PHP_EOL;
+            exit(0);
+        }
+    }
+}
+
 mt_srand(time());
 sleep(mt_rand(0, 300));
 
