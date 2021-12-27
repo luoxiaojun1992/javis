@@ -82,6 +82,8 @@ $client->post(
     ]
 );
 
+sleep(mt_rand(30, 120));
+
 $response = $client->get(
     $zentaoHost . '/index.php?m=my&f=work&mode=task',
     [
